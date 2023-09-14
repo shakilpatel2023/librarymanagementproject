@@ -1,0 +1,35 @@
+<table class="table m-5">
+  <thead>
+    <tr>
+      <th scope="col">Index</th>
+      <th scope="col">Patron Name</th>
+      <th scope="col">Patron Contact No.</th>
+      <th scope="col">Book Name</th>
+      <th scope="col">Author</th>
+      <th scope="col">ISBN No.</th>
+      <th scope="col">Issue Date</th>
+      <th scope="col">Return Date</th>
+      <th scope="col">late Fee</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% i = 0 %>
+    <% seen_transactions = Set.new %>
+    <% @patron_books_details.each do |patron_books_details| %>
+      <% if patron_books_details.is_a?(Transaction) && !seen_transactions.include?(patron_books_details.id) %>
+        <tr>
+          <td><%= i += 1 %></td>
+          <td><%= patron_books_details.patron.name %></td>
+          <td><%= patron_books_details.patron.contact_information %></td>
+          <td><%= patron_books_details.book.title %></td>
+          <td><%= patron_books_details.book.author %></td>
+          <td><%= patron_books_details.book.ISBN %></td>
+          <td><%= patron_books_details.date %></td>
+          <td><%= patron_books_details.return_date %></td>
+          <td><%= "Rs 10" %></td>
+        </tr>
+        <% seen_transactions.add(patron_books_details.id) %>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>

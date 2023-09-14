@@ -1,0 +1,16 @@
+<div class="row m-4">
+  <%= form_with(model: @transaction, url: transaction_update_return_book_path(@transaction_return_book), method: :put) do |f| %>
+    <div class="col-5 card">
+      <div class="card-body">
+        <div class="mb-3">
+          <%= f.label :ISBN, class: "form-label" %>
+          <%= f.text_field :ISBN, class: "form-control", placeholder: "ISBN No.", :value => @transaction_return_book.ISBN %>
+        </div>
+        <%= f.submit "Submit", class: "btn btn-primary" %>
+      </div>
+    </div>
+  <% end %>
+</div>
+<div class="m-5 btn btn-primary">
+  <%= link_to "Back", transactions_path(@transaction), :class => "btn" %>
+</div>

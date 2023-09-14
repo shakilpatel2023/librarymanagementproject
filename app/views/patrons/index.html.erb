@@ -1,0 +1,54 @@
+<%= render partial: "partials/header" %>
+<%= render partial: "partials/patron_form" %>
+<div class="m-5">
+  <%= form_tag(patrons_path, :method => "get", id: "search-form") do %>
+    <%= text_field_tag :search, params[:search], placeholder: "Search Here", class: "p-1" %>
+    <%= submit_tag "Search", class: "btn btn-primary", style: "margin-top:-5px" %>
+  <% end %>
+</div>
+<table class="table m-5">
+  <thead>
+    <tr>
+      <th scope="col">Index</th>
+      <th scope="col">Name</th>
+      <th scope="col">Contact No.</th>
+      <th scope="col">Edit</th>
+      <th scope="col">Delete</th>
+      <th scope="col">Assign Book</th>
+      <th scope="col">View assign books details</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% i = 0 %>
+    <% @patrons.each do |patron| %>
+      <tr>
+        <td><%= i += 1 %></td>
+        <td><%= patron.name %></td>
+        <td><%= patron.contact_information %></td>
+        <td>
+          <div class="btn btn-primary" style="margin:-5px">
+            <%= link_to "Edit", edit_patron_path(patron), :class => "btn" %>
+          </div>
+        </td>
+        <td>
+          <div class="btn btn-danger" style="margin:-5px">
+            <%= link_to "Delete", patron_path(patron.id), data: {
+                                                         turbo_method: :delete,
+                                                         turbo_confirm: "Are you sure?",
+                                                       }, :class => "btn" %>
+          </div>
+        </td>
+        <td>
+          <div class="btn btn-primary" style="margin:-5px">
+            <%= link_to "Assign", new_patron_transaction_path(patron), target: "_blank", :class => "btn" %>
+          </div>
+        </td>
+        <td>
+          <div class="btn btn-primary" style="margin:-5px">
+            <%= link_to "View", patron_path(patron.id), :class => "btn" %>
+          </div>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

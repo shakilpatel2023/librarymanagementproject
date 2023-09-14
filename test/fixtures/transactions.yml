@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  date: 2023-09-11
+  return_date: 2023-09-11
+  patron: one
+  book: one
+
+two:
+  date: 2023-09-11
+  return_date: 2023-09-11
+  patron: two
+  book: two
