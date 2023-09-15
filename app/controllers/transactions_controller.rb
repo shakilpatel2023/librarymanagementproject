@@ -61,14 +61,24 @@ class TransactionsController < ApplicationController
   end
 
   def edit
-    # @transaction = Transaction.find(params[:id])
+    @transaction = Transaction.find(params[:id])
+    @results1 = Patron.find(@transaction.patron_id)
+    @results2 = Book.find(@transaction.book_id)
+
+    @transaction.patron = @results1
+    @transaction.book = @results2
   end
 
   def update
-    if @transaction
+    @transaction = Transaction.find(params[:id])
+
+    if @transaction.update(transaction_params)
+      @transaction.patron.update(patron_params)
+      @transaction.book.update(book_params)
+
       redirect_to action: :index
     else
-      render :index, status: :unprocessable_entity
+      render :edit, status: :unprocessable_entity
     end
   end
 
@@ -86,9 +96,11 @@ class TransactionsController < ApplicationController
 
   def update_return_book
     @transaction_return_book = Transaction.find(params[:transaction_id])
+
     if @transaction_return_book
       @book = Book.find_by(ISBN: params[:transaction][:ISBN])
       @book_quantity_added = (@book.book_quantity + 1)
+
       if @book.update(book_quantity: @book_quantity_added)
         if @transaction_return_book.destroy
           redirect_to action: "index"
@@ -105,5 +117,17 @@ class TransactionsController < ApplicationController
 
   def set_transaction
     @transaction = Transaction.find(params[:id])
+  end
+
+  def transaction_params
+    params.require(:transaction).permit(:date, :return_date)
+  end
+
+  def patron_params
+    params.require(:transaction).permit(:name, :contact_information)
+  end
+
+  def book_params
+    params.require(:transaction).permit(:title, :author, :ISBN)
   end
 end

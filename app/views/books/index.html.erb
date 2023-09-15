@@ -25,7 +25,7 @@
         <td><%= book.title %></td>
         <td><%= book.author %></td>
         <td><%= book.ISBN %></td>
-        <td><%= book.book_quantity %></td>
+        <td>  <%= book.book_quantity != 0 ? book.book_quantity : '<span style="color:#ab2121;">Not Available</span>'.html_safe %></td>
         <td>
           <div class="btn btn-primary" style="margin:-5px">
             <%= link_to "Edit", edit_book_path(book), :class => "btn" %>

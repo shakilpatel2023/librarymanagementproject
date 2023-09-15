@@ -1,3 +1,37 @@
-<h1>Transactions#edit</h1>
-<p>Find me in app/views/transactions/edit.html.erb</p>
-<%= render partial: "partials/transaction" %>
+<div class="row m-4">
+  <%= form_with(model: @transaction, url: transaction_path(@transaction)) do |f| %>
+    <div class="col-5 card">
+      <div class="card-body">
+        <div class="mb-3">
+          <%= f.label :name, { class: "form-label" } %>
+          <%= f.text_field :name, { class: "form-control", placeholder: "Site title", :value => @transaction.patron.name} %>
+        </div>
+        <div class="mb-3">
+          <%= f.label :contact_information, { class: "form-label" } %>
+          <%= f.text_field :contact_information, { class: "form-control", placeholder: "Site author", :value => @transaction.patron.contact_information } %>
+        </div>
+        <div class="mb-3">
+          <%= f.label :title, { class: "form-label" } %>
+          <%= f.text_field :title, { class: "form-control", placeholder: "Site title",:value => @transaction.book.title } %>
+        </div>
+        <div class="mb-3">
+          <%= f.label :author, { class: "form-label" } %>
+          <%= f.text_field :author, { class: "form-control", placeholder: "Site author",:value => @transaction.book.author } %>
+        </div>
+        <div class="mb-3">
+          <%= f.label :ISBN, class: "form-label" %>
+          <%= f.text_field :ISBN, class: "form-control", placeholder: "ISBN No.",:value => @transaction.book.ISBN %>
+        </div>
+        <div class="mb-3">
+          <%= f.label :date, class: "form-label" %>
+          <%= f.date_field :date, class: "form-control" %>
+        </div>
+        <div class="mb-3">
+          <%= f.label :return_date, class: "form-label" %>
+          <%= f.date_field :return_date, class: "form-control" %>
+        </div>
+        <%= f.submit "Update", class: "btn btn-primary" %>
+      </div>
+    </div>
+  <% end %>
+</div>

@@ -1,7 +1,7 @@
 class Book < ApplicationRecord
-  validates :title, presence: true, length: { in: 3..30 }
+  validates :title, presence: true, uniqueness: true #, length: { in: 3..30 }
   validates :author, presence: true
-  validates :ISBN, presence: true, uniqueness: true, length: { is: 13 }
+  validates :ISBN, presence: true, uniqueness: true #, length: { is: 13 }
   validates :book_quantity, presence: true, numericality: { greater_than_or_equal_to: 0 }
 
   has_many :transactions, dependent: :destroy
