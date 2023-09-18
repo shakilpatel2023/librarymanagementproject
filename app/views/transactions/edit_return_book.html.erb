@@ -4,8 +4,14 @@
       <div class="card-body">
         <div class="mb-3">
           <%= f.label :ISBN, class: "form-label" %>
-          <%= f.text_field :ISBN, class: "form-control", placeholder: "ISBN No.", :value => @transaction_return_book.ISBN %>
+          <%= f.text_field :ISBN, class: "form-control", placeholder: "Enter fee." ,:value => @transaction_return_book.book.ISBN %>
         </div>
+        <%if  @transaction_return_book.late_fee >0%>
+          <div class="mb-3">
+            <%= f.label :late, class: "form-label" %>
+            <%= f.number_field :late_fee, class: "form-control", placeholder: "Enter fee.", :value => @transaction_return_book.late_fee %>
+          </div>
+        <%end%>
         <%= f.submit "Submit", class: "btn btn-primary" %>
       </div>
     </div>

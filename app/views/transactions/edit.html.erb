@@ -23,10 +23,6 @@
           <%= f.text_field :ISBN, class: "form-control", placeholder: "ISBN No.",:value => @transaction.book.ISBN %>
         </div>
         <div class="mb-3">
-          <%= f.label :late_fee, class: "form-label" %>
-          <%= f.number_field :late_fee, class: "form-control", placeholder: "ISBN No.",:value => @transaction.late_fee %>
-        </div>
-        <div class="mb-3">
           <%= f.label :date, class: "form-label" %>
           <%= f.date_field :date, class: "form-control" %>
         </div>
