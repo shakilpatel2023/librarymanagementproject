@@ -11,6 +11,9 @@ class TransactionsController < ApplicationController
     else
       @patronIds = []
       @bookIds = []
+      @days = 1
+      @dateforlatefee = 1.day.from_now(Date.today)
+      @handleRecounting = 0
 
       @transactiondata = Transaction.joins("INNER JOIN patrons ON patrons.id = transactions.patron_id
         INNER JOIN books ON books.id = transactions.book_id")
@@ -20,6 +23,39 @@ class TransactionsController < ApplicationController
       @transactiondata.each do |data|
         @patronIds << data.patron_id
         @bookIds << data.book_id
+
+        begin
+          if Date.parse(data.return_date.to_s) < Date.parse(data.date_for_late_fee.to_s) && Date.parse(Date.today.to_s) > Date.parse(data.date_for_late_fee.to_s)
+            @beginDate = Date.parse(Date.today.to_s)
+            @endDate = Date.parse(data.date_for_late_fee.to_s)
+            @days = (@beginDate - @endDate).to_i
+            @dateforlatefee = 1.day.from_now(data.date_for_late_fee)
+            @handleRecounting += 1
+          elsif Date.parse(data.return_date.to_s) == Date.parse(data.date_for_late_fee.to_s) && Date.parse(Date.today.to_s) > Date.parse(data.return_date.to_s)
+            @beginDate = Date.parse(Date.today.to_s)
+            @endDate = Date.parse(data.return_date.to_s)
+            @days = (@beginDate - @endDate).to_i
+            @dateforlatefee = 1.day.from_now(Date.today)
+            @handleRecounting += 1
+          elsif Date.parse(data.return_date.to_s) < Date.parse(Date.today.to_s)
+            @beginDate = Date.parse(Date.today.to_s)
+            @endDate = Date.parse(data.return_date.to_s)
+            @days = (@beginDate - @endDate).to_i
+            @dateforlatefee = 1.day.from_now(data.return_date.to_s)
+            @handleRecounting += 1
+          else
+            # Handle other cases here
+          end
+        rescue Error => e
+          puts "Error: #{e.message}"
+        end
+
+        if @handleRecounting == 1
+          # puts "------#{@days}"
+          data.late_fee += data.late_fee + 10 * @days
+          @transactiondata.update(late_fee: data.late_fee, date_for_late_fee: @dateforlatefee)
+        end
+
         @alltransactiondata << data
       end
 
@@ -45,8 +81,8 @@ class TransactionsController < ApplicationController
     @book = Book.find_by(ISBN: params[:transaction][:ISBN])
 
     if @book.book_quantity > 0
-      @transaction = Transaction.new(date: Date.today, return_date: Date.today + 30, patron_id: @patron.id, book_id: @book.id)
-
+      @transaction_params_data = { date: Date.today, return_date: Date.today + 30, date_for_late_fee: Date.today + 30, late_fee: 0, patron_id: @patron.id, book_id: @book.id }
+      @transaction = Transaction.new(@transaction_params_data)
       if @transaction.save!
         @updatedQuantity = (@book.book_quantity - 1)
         if @book.update(book_quantity: @updatedQuantity)
@@ -71,11 +107,9 @@ class TransactionsController < ApplicationController
 
   def update
     @transaction = Transaction.find(params[:id])
-
     if @transaction.update(transaction_params)
       @transaction.patron.update(patron_params)
       @transaction.book.update(book_params)
-
       redirect_to action: :index
     else
       render :edit, status: :unprocessable_entity
@@ -120,7 +154,15 @@ class TransactionsController < ApplicationController
   end
 
   def transaction_params
-    params.require(:transaction).permit(:date, :return_date)
+    permitted_params = params.require(:transaction).permit(:date, :return_date, :late_fee)
+
+    @transaction = Transaction.find(params[:id])
+
+    if Date.parse(@transaction.return_date.to_s) != Date.parse(params[:transaction][:return_date].to_s)
+      permitted_params[:date_for_late_fee] = params[:transaction][:return_date]
+    end
+
+    permitted_params
   end
 
   def patron_params

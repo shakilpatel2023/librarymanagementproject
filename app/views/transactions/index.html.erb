@@ -34,7 +34,7 @@
         <td><%= transaction.book.ISBN %></td>
         <td><%= transaction.date %></td>
         <td><%= transaction.return_date %></td>
-        <td><%= "Rs 10" %></td>
+        <td>Rs <%= transaction.late_fee ? transaction.late_fee : 0 %></td>
         <td>
           <div class="btn btn-primary" style="margin:-5px">
             <%= link_to "Return", transaction_edit_return_book_path(transaction), class: "btn btn-primary" %>

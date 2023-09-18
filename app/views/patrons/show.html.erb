@@ -26,7 +26,7 @@
           <td><%= patron_books_details.book.ISBN %></td>
           <td><%= patron_books_details.date %></td>
           <td><%= patron_books_details.return_date %></td>
-          <td><%= "Rs 10" %></td>
+          <td>Rs <%= patron_books_details.late_fee ? patron_books_details.late_fee : 0 %></td>
         </tr>
         <% seen_transactions.add(patron_books_details.id) %>
       <% end %>

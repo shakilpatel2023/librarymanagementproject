@@ -49,12 +49,9 @@ class PatronsController < ApplicationController
   end
 
   def edit
-    # @patron = Patron.find(params[:id])
-
   end
 
   def update
-    #  @patron = Patron.find(params[:id])
     if @patron.update(patron_params)
       redirect_to action: :index
     else
@@ -63,7 +60,6 @@ class PatronsController < ApplicationController
   end
 
   def destroy
-    # @patron = Patron.find(params[:id])
     if @patron.destroy
       redirect_to action: "index"
     end
