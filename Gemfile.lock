@@ -242,6 +242,7 @@ PLATFORMS
   x64-mingw-ucrt
 
 DEPENDENCIES
+  activestorage
   bootsnap
   bootstrap (~> 4.0)
   byebug

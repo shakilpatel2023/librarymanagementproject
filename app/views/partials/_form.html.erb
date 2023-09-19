@@ -1,5 +1,5 @@
 <div class="row m-4">
-  <%= form_with(model: @book) do |f| %>
+  <%= form_with(model: @book, local: true, html: { multipart: true }) do |f| %>
     <div class="col-5 card">
       <div class="card-body">
         <div class="mb-3">
@@ -17,6 +17,10 @@
         <div class=" mb-3">
           <%= f.label :book_quantity, class: "form-label" %>
           <%= f.number_field :book_quantity, class: "form-control", min: 0, :value => 0 %>
+        </div>
+        <div class=" mb-3">
+          <%= f.label :image, class: "form-label" %>
+          <%= f.file_field :image, class: "form-control" %>
         </div>
         <%= f.submit "Submit", class: "btn btn-primary" %>
       </div>
